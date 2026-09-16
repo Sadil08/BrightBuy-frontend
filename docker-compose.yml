@@ -1,0 +1,19 @@
+# Local development (specs/global/12_DEVOPS_CICD.md §1.3). Reaches brightbuy-backend's `api`
+# service over the shared network — bring that stack up first:
+#   (in brightbuy-backend/) docker network create brightbuy-shared && docker compose up --build
+#   (in brightbuy-frontend/) docker compose up --build
+
+services:
+  web:
+    build: .
+    environment:
+      BACKEND_URL: "http://api:8080" # reaches brightbuy-backend's `api` service by name
+    ports:
+      - "3000:3000"
+    networks:
+      brightbuy-shared: {}
+
+networks:
+  brightbuy-shared:
+    name: brightbuy-shared
+    external: true

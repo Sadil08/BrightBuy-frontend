@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# brightbuy-frontend
 
-## Getting Started
+The Next.js frontend for BrightBuy — storefront and admin console in one app, split by route
+group. See `../specs/` (in the parent `BrightBuy` folder) for the spec system this follows.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+- `http://localhost:3000/` — customer storefront
+- `http://localhost:3000/admin` — staff/manager console
+- `http://localhost:3000/api/health` — this container's own liveness check
+
+**Or via Docker Compose** (talks to `brightbuy-backend`'s stack over the shared network — see that
+repo's README first):
+```bash
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Checks (what CI runs — `.github/workflows/ci.yml`)
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Layout
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `../specs/global/01_TECH_STACK.md` §2/§3.
 
-## Learn More
+```
+src/app/(storefront)/   customer-facing routes — own root layout (specs/global "route groups")
+src/app/(admin)/         staff/manager console routes — own root layout
+src/app/api/health/       this container's liveness check
+src/lib/api-client/        the ONE place that calls the backend — every feature adds to this,
+                            never calls fetch() directly from a component
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 ships an `AGENTS.md`/`CLAUDE.md` pair reminding AI coding tools to check
+`node_modules/next/dist/docs/` before assuming anything about App Router behavior — Turbopack is
+now the default bundler and there's a new opt-in Cache Components model (`cacheComponents` in
+`next.config.ts`, NOT enabled here yet). Worth reading before big data-fetching changes.

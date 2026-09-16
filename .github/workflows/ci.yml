@@ -1,0 +1,37 @@
+# CI pipeline for brightbuy-frontend — specs/global/12_DEVOPS_CICD.md §2.2.
+name: frontend-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      # Unit/component tests (Vitest + React Testing Library) land here once the first component
+      # exists to test — see specs/global/05_TESTING_STRATEGY.md.
+      - run: npm run build
+
+  build-image:
+    needs: lint-and-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t brightbuy-frontend:${{ github.sha }} .
+      # Pushing to a registry (GHCR) is added once a registry/hosting target is chosen
+      # (TBD-7, specs/global/10_BA_AUDIT_OPEN_QUESTIONS.md).
