@@ -1,7 +1,20 @@
-// A route handler (not a page) — lives outside both route groups, at /api/health, and returns
-// JSON instead of rendering anything. This is the frontend container's own liveness check
-// (mirrors the backend's /healthz, specs/global/12_DEVOPS_CICD.md §1.1) — used by
-// docker-compose's healthcheck and, later, whatever orchestrator replaces it.
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8080";
+
 export async function GET() {
-  return Response.json({ status: "ok" });
+  try {
+    const response = await fetch(`${BACKEND_URL}/healthz`, {
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      return Response.json({ status: "unhealthy" }, { status: 503 });
+    }
+
+    return Response.json({ status: "ok", backend: "reachable" });
+  } catch {
+    return Response.json(
+      { status: "unhealthy", backend: "unreachable" },
+      { status: 503 },
+    );
+  }
 }
