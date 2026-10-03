@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "../globals.css";
 
 // This is a ROOT layout (it defines <html>/<body>) even though it's nested inside a route group.
@@ -20,7 +21,19 @@ export default function StorefrontLayout({
   return (
     <html lang="en">
       <body>
-        {/* Shared storefront chrome (nav, cart icon, footer) lands here once 01-catalog builds it. */}
+        {/* 01-catalog's minimal version of this comment's long-standing placeholder: just enough
+            chrome to get from any page to the catalog. Cart icon/badge lands with 03-cart; a real
+            footer isn't anything any feature's spec actually asks for yet. */}
+        <header className="border-b border-zinc-200 dark:border-zinc-800">
+          <div className="mx-auto flex max-w-5xl items-center gap-6 p-4">
+            <Link href="/" className="font-semibold">
+              BrightBuy
+            </Link>
+            <Link href="/products" className="text-sm text-zinc-600 dark:text-zinc-400">
+              Products
+            </Link>
+          </div>
+        </header>
         {children}
       </body>
     </html>
