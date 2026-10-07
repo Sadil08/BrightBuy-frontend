@@ -14,6 +14,14 @@ npm run dev
 - `http://localhost:3000/admin` — staff/manager console
 - `http://localhost:3000/api/health` — this container's own liveness check
 
+## Cart
+
+Guests keep cart lines in browser storage; the cart page refreshes each line's current price from
+the catalog. Customer cart requests go through same-origin `/api/cart/*` route handlers, which
+forward the session cookie to the backend. After a customer logs in, any guest lines are merged
+once and removed from browser storage after a successful merge. The cart page is available at
+`/cart`; add items from a product's detail page.
+
 **Or via Docker Compose** (talks to `brightbuy-backend`'s stack over the shared network — see that
 repo's README first):
 ```bash
@@ -34,7 +42,7 @@ See `../specs/global/01_TECH_STACK.md` §2/§3.
 ```
 src/app/(storefront)/   customer-facing routes — own root layout (specs/global "route groups")
 src/app/(admin)/         staff/manager console routes — own root layout
-src/app/api/health/       this container's liveness check
+src/app/api/              same-origin health check, catalog detail and authenticated cart proxies
 src/lib/api-client/        the ONE place that calls the backend — every feature adds to this,
                             never calls fetch() directly from a component
 ```

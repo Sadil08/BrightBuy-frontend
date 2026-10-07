@@ -2,19 +2,31 @@
 
 import { useState } from "react";
 import type { ProductVariant } from "@/lib/api-client/catalog";
+import { addCustomerCartItem } from "@/lib/cart/customer-cart";
+import { addGuestLine, loadGuestCart } from "@/lib/cart/guest-cart";
+import { notifyCustomerCartChanged } from "@/lib/cart/events";
+import { MAX_LINE_QUANTITY } from "@/lib/cart/types";
 import { StockBadge } from "../../_components/StockBadge";
 
-// The ONE client component this whole feature needs. Everything else (list page, category nav,
-// search, pagination, even most of THIS page) is a Server Component — this one genuinely needs
-// "use client" + useState, because picking a variant has to update the displayed price/stock
-// without a full page navigation, and that's interactive, in-browser state.
+// Product detail keeps its catalog reads server-side; this client component handles variant
+// selection and adding the chosen variant without a full page navigation.
 //
 // FR-CATALOG-5 / AC-CATALOG-4, straight from plan.md §7: "a product with a single variant MUST be
 // presented without asking the user to choose a variant... no special API field needed." There's no
 // `isSingleVariant` flag anywhere in the backend response — this component just checks
 // `variants.length === 1` itself, which is the entire implementation of that rule.
-export function VariantSelector({ variants }: { variants: ProductVariant[] }) {
+export function VariantSelector({
+  productId,
+  variants,
+  isCustomer,
+}: {
+  productId: number;
+  variants: ProductVariant[];
+  isCustomer: boolean;
+}) {
   const [selectedId, setSelectedId] = useState(variants[0]?.variantId);
+  const [pending, setPending] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
   const selected = variants.find((v) => v.variantId === selectedId) ?? variants[0];
 
   if (!selected) {
@@ -55,6 +67,42 @@ export function VariantSelector({ variants }: { variants: ProductVariant[] }) {
         <span className="text-xl font-semibold">${selected.price}</span>
         <StockBadge status={selected.stockStatus} />
       </div>
+      <button
+        type="button"
+        disabled={pending || selected.stockStatus === "OUT_OF_STOCK"}
+        onClick={async () => {
+          setPending(true);
+          setMessage(null);
+          try {
+            if (isCustomer) {
+              await addCustomerCartItem({ variantId: selected.variantId, quantity: 1 });
+              notifyCustomerCartChanged();
+            } else {
+              const existingQuantity =
+                loadGuestCart().find((line) => line.variantId === selected.variantId)?.quantity ?? 0;
+              addGuestLine({ variantId: selected.variantId, productId, quantity: 1 });
+              const savedQuantity =
+                loadGuestCart().find((line) => line.variantId === selected.variantId)?.quantity;
+              if (savedQuantity !== Math.min(existingQuantity + 1, MAX_LINE_QUANTITY)) {
+                throw new Error("Your browser could not save the guest cart.");
+              }
+            }
+            setMessage("Added to cart.");
+          } catch (error) {
+            setMessage(error instanceof Error ? error.message : "Could not add this item to your cart.");
+          } finally {
+            setPending(false);
+          }
+        }}
+        className="mt-5 rounded bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+      >
+        {pending ? "Adding…" : "Add to cart"}
+      </button>
+      {message && (
+        <p role="status" className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">
+          {message}
+        </p>
+      )}
     </div>
   );
 }

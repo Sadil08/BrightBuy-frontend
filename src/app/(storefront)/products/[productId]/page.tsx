@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApiError } from "@/lib/api-client";
 import { getProduct } from "@/lib/api-client/catalog";
+import { getSession } from "@/lib/auth/session";
 import { VariantSelector } from "./VariantSelector";
 
 // `params` is also a Promise here, same reasoning as `searchParams` on the list page — this
@@ -39,6 +40,8 @@ export default async function ProductDetailPage({
     throw err;
   }
 
+  const user = await getSession();
+
   return (
     <main className="mx-auto max-w-3xl p-8">
       <Link href="/products" className="text-sm text-zinc-500 hover:underline">
@@ -56,7 +59,11 @@ export default async function ProductDetailPage({
       <p className="mt-4 text-zinc-700 dark:text-zinc-300">{product.description}</p>
 
       <div className="mt-6">
-        <VariantSelector variants={product.variants} />
+        <VariantSelector
+          productId={product.productId}
+          variants={product.variants}
+          isCustomer={user?.role === "CUSTOMER"}
+        />
       </div>
     </main>
   );
