@@ -3,6 +3,8 @@ import Link from "next/link";
 import "../globals.css";
 import { logoutAction } from "@/app/actions/auth";
 import { getSession } from "@/lib/auth/session";
+import { CartMergeSync } from "./_components/CartMergeSync";
+import { CartNavLink } from "./_components/CartNavLink";
 
 // This is a ROOT layout (it defines <html>/<body>) even though it's nested inside a route group.
 // (storefront) and (admin) are two separate root layouts — Next.js route groups
@@ -28,9 +30,8 @@ export default async function StorefrontLayout({
   return (
     <html lang="en">
       <body>
-        {/* 01-catalog's minimal version of this comment's long-standing placeholder: just enough
-            chrome to get from any page to the catalog. Cart icon/badge lands with 03-cart; a real
-            footer isn't anything any feature's spec actually asks for yet. */}
+        {/* Shared storefront navigation; cart count and guest-cart sync stay in small client
+            components so the authenticated user lookup remains server-side. */}
         <header className="border-b border-zinc-200 dark:border-zinc-800">
           <div className="mx-auto flex max-w-5xl items-center gap-6 p-4">
             <Link href="/" className="font-semibold">
@@ -39,6 +40,7 @@ export default async function StorefrontLayout({
             <Link href="/products" className="text-sm text-zinc-600 dark:text-zinc-400">
               Products
             </Link>
+            <CartNavLink isCustomer={user?.role === "CUSTOMER"} />
 
             {/* ml-auto pushes the auth controls to the far right without needing a second nav or a
                 flex-wrapper change — the two links above stay left-aligned exactly as before. */}
@@ -74,6 +76,7 @@ export default async function StorefrontLayout({
             </div>
           </div>
         </header>
+        <CartMergeSync isCustomer={user?.role === "CUSTOMER"} />
         {children}
       </body>
     </html>
