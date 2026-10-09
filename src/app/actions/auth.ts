@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { register, login, logout, ApiError } from "@/lib/api-client/auth";
 import { parseSetCookie } from "@/lib/api-client/cookie-utils";
+import { safeNext } from "@/lib/auth/safe-next";
 import { cookieHeaderFromRequest } from "@/lib/auth/session";
 
 export interface AuthFormState {
@@ -50,7 +51,7 @@ export async function registerAction(_prevState: AuthFormState, formData: FormDa
   // redirect() works by throwing a special Next.js-internal value — it must be called OUTSIDE any
   // try/catch, or that catch would swallow it and the redirect would silently never happen.
   await persistCookies(setCookies);
-  redirect("/");
+  redirect(safeNext(formData.get("next")));
 }
 
 export async function loginAction(_prevState: AuthFormState, formData: FormData): Promise<AuthFormState> {
@@ -72,7 +73,7 @@ export async function loginAction(_prevState: AuthFormState, formData: FormData)
   }
 
   await persistCookies(setCookies);
-  redirect("/");
+  redirect(safeNext(formData.get("next")));
 }
 
 // logoutAction takes no form fields — it's invoked by a plain <form action={logoutAction}> with a

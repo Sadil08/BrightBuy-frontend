@@ -15,25 +15,25 @@ function RoleRow({ role, permissions }: { role: Role; permissions: Permission[] 
   return (
     <form
       action={formAction}
-      className="rounded border border-zinc-200 p-4 dark:border-zinc-800"
+      className="card p-5"
     >
       <input type="hidden" name="roleId" value={role.roleId} />
-      <h3 className="font-medium">{role.name}</h3>
+      <h3 className="text-lg font-extrabold">{role.name}</h3>
 
       {role.name === "ADMIN" && (
-        <p className="mt-1 text-xs text-zinc-500">
+        <p className="mt-1 text-xs text-ink-faint">
           AC-AUTH-7: saving this is accepted, for display consistency — but ADMIN bypasses this list
           entirely (SEC-AUTH-1), so it has no actual effect on what an ADMIN account can do.
         </p>
       )}
 
       {state.error && (
-        <p className="mt-2 rounded bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+        <p role="alert" className="alert alert-bad mt-3">
           {state.error}
         </p>
       )}
       {state.success && (
-        <p className="mt-2 rounded bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+        <p role="status" className="alert alert-good mt-3">
           Saved.
         </p>
       )}
@@ -43,9 +43,10 @@ function RoleRow({ role, permissions }: { role: Role; permissions: Permission[] 
           browser's own concern, not something this component needs to track in React state. */}
       <div className="mt-3 flex flex-wrap gap-4">
         {permissions.map((permission) => (
-          <label key={permission.permissionId} className="flex items-center gap-2 text-sm">
+          <label key={permission.permissionId} className="flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-3 py-2 font-mono text-xs">
             <input
               type="checkbox"
+              className="h-4 w-4 accent-[var(--action)]"
               name="permissionCodes"
               value={permission.code}
               defaultChecked={role.permissions.includes(permission.code)}
@@ -58,7 +59,7 @@ function RoleRow({ role, permissions }: { role: Role; permissions: Permission[] 
       <button
         type="submit"
         disabled={pending}
-        className="mt-4 rounded bg-zinc-900 px-3 py-1.5 text-sm text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+        className="btn btn-primary btn-sm mt-4"
       >
         {pending ? "Saving..." : "Save"}
       </button>

@@ -16,6 +16,9 @@ export class ApiError extends Error {
     public status: number,
     public code: string,
     message: string,
+    // The parsed JSON error body, kept whole so callers can read extra fields the backend adds to
+    // some errors (e.g. checkout's 409 STOCK_EXCEEDED carries `unavailableLines`).
+    public body: Record<string, unknown> = {},
   ) {
     super(message);
     this.name = "ApiError";
@@ -33,7 +36,7 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({ code: "UNKNOWN", message: res.statusText }));
-    throw new ApiError(res.status, body.code ?? "UNKNOWN", body.message ?? res.statusText);
+    throw new ApiError(res.status, body.code ?? "UNKNOWN", body.message ?? res.statusText, body);
   }
 
   return res.json() as Promise<T>;

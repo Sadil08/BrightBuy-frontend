@@ -14,38 +14,38 @@ export function CreateStaffForm({ roles }: { roles: Role[] }) {
   const staffRoles = roles.filter((r) => r.name !== "CUSTOMER");
 
   return (
-    <form action={formAction} className="flex flex-col gap-4 rounded border border-zinc-200 p-4 dark:border-zinc-800">
-      <h2 className="font-medium">Create a staff account</h2>
+    <form action={formAction} className="card flex flex-col gap-4 p-5">
+      <h2 className="text-lg font-extrabold">Create a staff account</h2>
 
       {state.error && (
-        <p className="rounded bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+        <p role="alert" className="alert alert-bad">
           {state.error}
         </p>
       )}
       {state.success && (
-        <p className="rounded bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+        <p role="status" className="alert alert-good">
           Account created.
         </p>
       )}
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-zinc-600 dark:text-zinc-400">Name</span>
-        <input name="name" required className="rounded border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900" />
+      <label className="block">
+        <span className="label">Name</span>
+        <input name="name" required className="input" />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-zinc-600 dark:text-zinc-400">Email</span>
-        <input type="email" name="email" required className="rounded border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900" />
+      <label className="block">
+        <span className="label">Email</span>
+        <input type="email" name="email" required className="input" />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-zinc-600 dark:text-zinc-400">Password</span>
-        <input type="password" name="password" required minLength={8} className="rounded border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900" />
+      <label className="block">
+        <span className="label">Password</span>
+        <input type="password" name="password" required minLength={8} className="input" />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm text-zinc-600 dark:text-zinc-400">Role</span>
-        <select name="roleId" required className="rounded border border-zinc-300 px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900">
+      <label className="block">
+        <span className="label">Role</span>
+        <select name="roleId" required className="input">
           {staffRoles.map((role) => (
             <option key={role.roleId} value={role.roleId}>
               {role.name}
@@ -57,7 +57,7 @@ export function CreateStaffForm({ roles }: { roles: Role[] }) {
       <button
         type="submit"
         disabled={pending}
-        className="rounded bg-zinc-900 px-4 py-2 text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+        className="btn btn-primary"
       >
         {pending ? "Creating..." : "Create account"}
       </button>

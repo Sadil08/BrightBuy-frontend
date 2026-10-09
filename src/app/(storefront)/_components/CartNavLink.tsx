@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { BagIcon } from "@/components/icons";
 import { getCustomerCart } from "@/lib/cart/customer-cart";
 import { CUSTOMER_CART_CHANGED_EVENT } from "@/lib/cart/events";
 import { GUEST_CART_CHANGED_EVENT, loadGuestCart } from "@/lib/cart/guest-cart";
@@ -44,10 +45,24 @@ export function CartNavLink({ isCustomer }: { isCustomer: boolean }) {
   return (
     <Link
       href="/cart"
-      className="text-sm text-zinc-600 dark:text-zinc-400"
+      className="btn btn-outline relative !px-3.5"
       aria-label={error ? "Cart count unavailable" : `Cart${count === null ? "" : `, ${count} items`}`}
     >
-      Cart{error ? " (unavailable)" : count === null ? "" : ` (${count})`}
+      <BagIcon />
+      <span className="hidden sm:inline">Cart</span>
+      {error ? (
+        <span className="text-bad" aria-hidden="true">!</span>
+      ) : (
+        count !== null &&
+        count > 0 && (
+          <span
+            className="num absolute -right-2 -top-2 grid h-[1.4rem] min-w-[1.4rem] place-items-center rounded-full bg-tag px-1 text-xs font-extrabold text-tag-ink ring-2 ring-paper"
+            aria-hidden="true"
+          >
+            {count}
+          </span>
+        )
+      )}
     </Link>
   );
 }

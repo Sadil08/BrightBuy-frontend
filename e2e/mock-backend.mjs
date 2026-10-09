@@ -26,6 +26,11 @@ const server = createServer((request, response) => {
     response.end(JSON.stringify(product));
     return;
   }
+  if (request.method === "GET" && request.url === "/api/v1/cities") {
+    response.writeHead(200, { "Content-Type": "application/json" });
+    response.end(JSON.stringify([{ cityId: 1, name: "Houston" }]));
+    return;
+  }
   response.writeHead(404, { "Content-Type": "application/json" });
   response.end(JSON.stringify({ code: "NOT_FOUND", message: "Not found" }));
 });

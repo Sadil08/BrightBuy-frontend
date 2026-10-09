@@ -55,3 +55,28 @@ export async function requireAdmin(): Promise<UserProfile> {
   }
   return user;
 }
+
+// requireStaff admits ANY non-customer account to the staff console shell (warehouse staff, order
+// managers, managers, admins). Like requireAdmin it is a coarse, UX-level gate: what each role can
+// actually DO is enforced by the backend's per-permission checks, and each console page narrows
+// further for itself (the users and roles pages call requireAdmin; inventory calls requireInventoryAccess).
+export async function requireStaff(): Promise<UserProfile> {
+  const user = await requireUser();
+  if (user.role === "CUSTOMER") {
+    redirect("/");
+  }
+  return user;
+}
+
+// Inventory is granted by the `stock:adjust` permission, which migration 0004 gives to
+// WAREHOUSE_STAFF (ADMIN holds every permission). The profile only carries a role name, so this is the
+// matching coarse check; the backend's RequirePermission("stock:adjust") is the real enforcement.
+export const INVENTORY_ROLES = ["WAREHOUSE_STAFF", "ADMIN"] as const;
+
+export async function requireInventoryAccess(): Promise<UserProfile> {
+  const user = await requireStaff();
+  if (!(INVENTORY_ROLES as readonly string[]).includes(user.role)) {
+    redirect("/admin");
+  }
+  return user;
+}

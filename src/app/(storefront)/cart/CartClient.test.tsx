@@ -29,10 +29,10 @@ describe("guest cart page", () => {
     render(<CartClient isCustomer={false} />);
 
     expect(await screen.findByText("BrightBook")).toBeInTheDocument();
-    expect(screen.getByTestId("cart-subtotal")).toHaveTextContent("$1599.98");
+    expect(screen.getByTestId("cart-subtotal")).toHaveTextContent("$1,599.98");
     fireEvent.click(screen.getByRole("button", { name: "Increase quantity for BrightBook" }));
     await waitFor(() => expect(screen.getByText("3", { selector: "span" })).toBeInTheDocument());
-    expect(screen.getByTestId("cart-subtotal")).toHaveTextContent("$2399.97");
+    expect(screen.getByTestId("cart-subtotal")).toHaveTextContent("$2,399.97");
 
     fireEvent.click(screen.getByRole("button", { name: "Remove" }));
     await waitFor(() => expect(screen.getByText("Your cart is empty.")).toBeInTheDocument());

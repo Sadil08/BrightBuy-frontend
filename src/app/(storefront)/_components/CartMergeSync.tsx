@@ -5,6 +5,8 @@ import { clearGuestCart, loadGuestCart, toMergePayload } from "@/lib/cart/guest-
 import { mergeCustomerCart } from "@/lib/cart/customer-cart";
 import { notifyCustomerCartChanged } from "@/lib/cart/events";
 
+// Runs once after login (FR-CART-5): folds whatever the visitor put in their browser cart as a guest
+// into their account cart. Higher quantity wins per variant — the backend decides, not this code.
 export function CartMergeSync({ isCustomer }: { isCustomer: boolean }) {
   const inFlight = useRef(false);
   const [retry, setRetry] = useState(0);
@@ -48,13 +50,15 @@ export function CartMergeSync({ isCustomer }: { isCustomer: boolean }) {
 
   if (!message) return null;
   return (
-    <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 pb-3 text-sm" role="status">
-      <span>{message}</span>
-      {message.includes("Retry") && (
-        <button type="button" className="underline" onClick={() => setRetry((value) => value + 1)}>
-          Retry
-        </button>
-      )}
+    <div className="container-page pt-3" role="status">
+      <div className="alert alert-info items-center">
+        <span>{message}</span>
+        {message.includes("Retry") && (
+          <button type="button" className="btn btn-sm btn-outline ml-auto" onClick={() => setRetry((value) => value + 1)}>
+            Retry
+          </button>
+        )}
+      </div>
     </div>
   );
 }

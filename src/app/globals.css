@@ -1,26 +1,484 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  BrightBuy design system — "price tag".
+  Concept: a well-lit shop floor. Cool paper ground, deep ink type, cobalt for every action, and one
+  signal-yellow reserved for price tags and the odd highlight. Yellow is never a button, so when the
+  eye lands on it, it is always about money or a promise.
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  Every colour is a token. Bare :root holds the complete light palette; the two dark blocks only
+  redefine tokens (system preference, unless an explicit data-theme overrides it, and the explicit
+  dark choice).
+*/
+:root {
+  --paper: #f3f5fa; /* page ground, a cool grey leaning toward the cobalt */
+  --surface: #ffffff; /* cards, inputs */
+  --surface-2: #eaeef7; /* quiet fills: chips, table heads */
+  --ink: #11162b; /* text and the "ink" brand colour */
+  --ink-soft: #4b5473; /* secondary text */
+  --ink-faint: #7a83a1; /* captions, placeholders */
+  --line: #dde2ef; /* hairlines */
+  --line-strong: #c3cbe0;
+
+  --action: #2244f0; /* cobalt: buttons, links, focus */
+  --action-hover: #1632c4;
+  --action-ink: #ffffff;
+  --action-soft: #e4e9ff; /* tinted backgrounds for selected states */
+
+  --tag: #ffc61a; /* signal yellow: price tags, highlights */
+  --tag-ink: #231a00;
+
+  --good: #0f7a4d;
+  --good-soft: #d9f4e6;
+  --warn: #a15c00;
+  --warn-soft: #ffeccc;
+  --bad: #c0262d;
+  --bad-soft: #fde1e2;
+
+  --shadow: 0 1px 2px rgb(17 22 43 / 0.06), 0 4px 16px rgb(17 22 43 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(17 22 43 / 0.08), 0 14px 32px rgb(17 22 43 / 0.12);
+  --radius: 0.875rem;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    --paper: #0c1020;
+    --surface: #151b33;
+    --surface-2: #1d2547;
+    --ink: #eef1fb;
+    --ink-soft: #aab3d3;
+    --ink-faint: #7f89ad;
+    --line: #272f52;
+    --line-strong: #38426d;
+
+    --action: #7b93ff;
+    --action-hover: #9db0ff;
+    --action-ink: #0b1030;
+    --action-soft: #1f2a5c;
+
+    --tag: #ffcf3d;
+    --tag-ink: #231a00;
+
+    --good: #4fd69a;
+    --good-soft: #0f3326;
+    --warn: #ffb44d;
+    --warn-soft: #3a2a0c;
+    --bad: #ff8087;
+    --bad-soft: #3d1519;
+
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.3);
+    --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 14px 32px rgb(0 0 0 / 0.45);
+    color-scheme: dark;
   }
 }
 
+:root[data-theme="dark"] {
+  --paper: #0c1020;
+  --surface: #151b33;
+  --surface-2: #1d2547;
+  --ink: #eef1fb;
+  --ink-soft: #aab3d3;
+  --ink-faint: #7f89ad;
+  --line: #272f52;
+  --line-strong: #38426d;
+
+  --action: #7b93ff;
+  --action-hover: #9db0ff;
+  --action-ink: #0b1030;
+  --action-soft: #1f2a5c;
+
+  --tag: #ffcf3d;
+  --tag-ink: #231a00;
+
+  --good: #4fd69a;
+  --good-soft: #0f3326;
+  --warn: #ffb44d;
+  --warn-soft: #3a2a0c;
+  --bad: #ff8087;
+  --bad-soft: #3d1519;
+
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.3);
+  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 14px 32px rgb(0 0 0 / 0.45);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-ink: var(--action-ink);
+  --color-action-soft: var(--action-soft);
+  --color-tag: var(--tag);
+  --color-tag-ink: var(--tag-ink);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-bad: var(--bad);
+  --color-bad-soft: var(--bad-soft);
+
+  --font-display: var(--f-display);
+  --font-sans: var(--f-body);
+  --font-mono: var(--f-data);
+
+  --shadow-card: var(--shadow);
+  --shadow-lift: var(--shadow-lift);
+  --radius-card: var(--radius);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--f-body), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--f-display), var(--f-body), system-ui, sans-serif;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  line-height: 1.1;
+}
+
+::selection {
+  background: var(--tag);
+  color: var(--tag-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Components ---------------------------------------------------------------------------- */
+@layer components {
+  .container-page {
+    margin-inline: auto;
+    width: 100%;
+    max-width: 76rem;
+    padding-inline: 1.25rem;
+  }
+
+  /* Buttons: one shape, three weights. Cobalt = do it, ink outline = alternative, ghost = quiet. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.7rem;
+    border: 1.5px solid transparent;
+    padding: 0.7rem 1.15rem;
+    font-weight: 650;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      background 0.15s,
+      transform 0.1s,
+      box-shadow 0.15s,
+      border-color 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: var(--action);
+    color: var(--action-ink);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.15);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--action-hover);
+  }
+  .btn-outline {
+    background: var(--surface);
+    color: var(--ink);
+    border-color: var(--line-strong);
+  }
+  .btn-outline:hover:not(:disabled) {
+    border-color: var(--ink);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-soft);
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+  .btn-danger {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+  .btn-lg {
+    padding: 0.9rem 1.5rem;
+    font-size: 1.02rem;
+  }
+  .btn-sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: 0.55rem;
+  }
+
+  /* Form controls */
+  .label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+    font-weight: 650;
+    color: var(--ink-soft);
+  }
+  .input {
+    width: 100%;
+    border-radius: 0.7rem;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    padding: 0.7rem 0.9rem;
+    font-size: 0.97rem;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .input::placeholder {
+    color: var(--ink-faint);
+  }
+  .input:hover {
+    border-color: var(--ink-faint);
+  }
+  .input:focus-visible {
+    outline: none;
+    border-color: var(--action);
+    box-shadow: 0 0 0 3px var(--action-soft);
+  }
+  .hint {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+  }
+
+  /* Surfaces */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .card-flat {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+
+  /* Chips (filters) and badges (status) */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+  }
+  .chip:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .chip[aria-current="true"],
+  .chip[aria-checked="true"] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.18rem 0.65rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .badge-good {
+    background: var(--good-soft);
+    color: var(--good);
+  }
+  .badge-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+  .badge-bad {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+  .badge-neutral {
+    background: var(--surface-2);
+    color: var(--ink-soft);
+  }
+  .badge-action {
+    background: var(--action-soft);
+    color: var(--action);
+  }
+
+  /* The signature element: a price tag. Cut corner on the left, yellow, tabular figures. */
+  .price-tag {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.15rem;
+    background: var(--tag);
+    color: var(--tag-ink);
+    font-family: var(--f-display), system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    padding: 0.28rem 0.7rem 0.28rem 1.05rem;
+    border-radius: 0.3rem 0.55rem 0.55rem 0.3rem;
+    clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
+    line-height: 1.1;
+  }
+  .price-tag .cur {
+    font-size: 0.7em;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+  .eyebrow {
+    font-size: 0.74rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* Skeleton shimmer for loading states */
+  .skeleton {
+    border-radius: 0.6rem;
+    background: linear-gradient(
+      90deg,
+      var(--surface-2) 25%,
+      var(--line) 50%,
+      var(--surface-2) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite linear;
+  }
+  @keyframes shimmer {
+    from {
+      background-position: 200% 0;
+    }
+    to {
+      background-position: -200% 0;
+    }
+  }
+
+  .alert {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+  }
+  .alert-bad {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+  .alert-warn {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+  .alert-good {
+    background: var(--good-soft);
+    color: var(--good);
+  }
+  .alert-info {
+    background: var(--action-soft);
+    color: var(--action);
+  }
+
+  .table-wrap {
+    overflow-x: auto;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .table th {
+    text-align: left;
+    padding: 0.65rem 0.9rem;
+    background: var(--surface-2);
+    color: var(--ink-soft);
+    font-size: 0.76rem;
+    font-weight: 750;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .table td {
+    padding: 0.8rem 0.9rem;
+    border-top: 1px solid var(--line);
+    vertical-align: middle;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.45s ease-out both;
 }

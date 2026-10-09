@@ -6,6 +6,7 @@ import {
   GUEST_CART_CHANGED_EVENT,
   loadGuestCart,
 } from "./guest-cart";
+import { centsToMoney, moneyToCents } from "@/lib/money";
 import type { GuestCartLine } from "./types";
 
 export interface PricedGuestCartLine extends GuestCartLine {
@@ -95,7 +96,7 @@ export function useGuestCart(pricesEnabled = true) {
     const variant = product?.variants.find((item) => item.variantId === line.variantId);
     const unavailable = !product || !variant;
     const unitPrice = variant?.price ?? "0.00";
-    const lineTotal = formatMoney(moneyToCents(unitPrice) * line.quantity);
+    const lineTotal = centsToMoney(moneyToCents(unitPrice) * line.quantity);
     return {
       ...line,
       productName: product?.name ?? "Unavailable product",
@@ -115,14 +116,6 @@ export function useGuestCart(pricesEnabled = true) {
   };
 }
 
-export function moneyToCents(value: string): number {
-  const match = /^(\d+)\.(\d{2})$/.exec(value);
-  if (!match) throw new Error(`Invalid money value returned by API: ${value}`);
-  return Number(match[1]) * 100 + Number(match[2]);
-}
-
-export function formatMoney(cents: number): string {
-  const dollars = Math.floor(cents / 100);
-  const remainder = cents % 100;
-  return `${dollars}.${String(remainder).padStart(2, "0")}`;
-}
+// Re-exported so existing imports keep working; the implementations live in src/lib/money.ts.
+export { moneyToCents } from "@/lib/money";
+export { centsToMoney as formatMoney } from "@/lib/money";

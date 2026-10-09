@@ -22,6 +22,7 @@ import { ACCESS_TOKEN_COOKIE, REFRESH_TOKEN_COOKIE } from "@/lib/api-client/auth
 
 const ADMIN_PREFIX = "/admin";
 const AUTH_ONLY_PAGES = ["/login", "/register"]; // pointless to show a logged-in visitor a login form
+const CUSTOMER_PREFIXES = ["/checkout", "/orders"]; // FR-CHECKOUT-20: only signed-in customers
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -35,6 +36,14 @@ export function proxy(request: NextRequest) {
     // the real authorization check is in the admin pages themselves (src/app/(admin)/admin/*), via
     // the Data Access Layer pattern (src/lib/auth/session.ts) — "close to the data," not in proxy.
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (CUSTOMER_PREFIXES.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)) && !possiblyAuthenticated) {
+    // Same optimistic cookie-presence check as above. The real checks (valid session, CUSTOMER role)
+    // run in the pages themselves. `next` brings the visitor straight back after logging in.
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname + request.nextUrl.search);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (AUTH_ONLY_PAGES.includes(pathname) && hasAccessToken) {

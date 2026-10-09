@@ -1,17 +1,27 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { safeNext } from "@/lib/auth/safe-next";
+import { AuthShell } from "../_components/AuthShell";
 import { RegisterForm } from "./RegisterForm";
 
-export default function RegisterPage() {
+export const metadata: Metadata = { title: "Create an account" };
+
+export default async function RegisterPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const next = safeNext((await searchParams).next);
   return (
-    <main className="mx-auto max-w-sm p-8">
-      <h1 className="text-2xl font-semibold">Create an account</h1>
-      <RegisterForm />
-      <p className="mt-6 text-sm text-zinc-500">
-        Already have an account?{" "}
-        <Link href="/login" className="underline">
-          Log in
-        </Link>
-      </p>
-    </main>
+    <AuthShell
+      title="Create your account"
+      subtitle="It takes a minute, and your guest cart comes with you."
+      footer={
+        <>
+          Already have an account?{" "}
+          <Link href={next === "/" ? "/login" : `/login?next=${encodeURIComponent(next)}`} className="font-bold">
+            Log in
+          </Link>
+        </>
+      }
+    >
+      <RegisterForm next={next} />
+    </AuthShell>
   );
 }

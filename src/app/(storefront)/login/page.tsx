@@ -1,17 +1,27 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { safeNext } from "@/lib/auth/safe-next";
+import { AuthShell } from "../_components/AuthShell";
 import { LoginForm } from "./LoginForm";
 
-export default function LoginPage() {
+export const metadata: Metadata = { title: "Log in" };
+
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
+  const next = safeNext((await searchParams).next);
   return (
-    <main className="mx-auto max-w-sm p-8">
-      <h1 className="text-2xl font-semibold">Log in</h1>
-      <LoginForm />
-      <p className="mt-6 text-sm text-zinc-500">
-        New here?{" "}
-        <Link href="/register" className="underline">
-          Create an account
-        </Link>
-      </p>
-    </main>
+    <AuthShell
+      title="Welcome back"
+      subtitle="Log in to see your cart, your orders and check out."
+      footer={
+        <>
+          New here?{" "}
+          <Link href={next === "/" ? "/register" : `/register?next=${encodeURIComponent(next)}`} className="font-bold">
+            Create an account
+          </Link>
+        </>
+      }
+    >
+      <LoginForm next={next} />
+    </AuthShell>
   );
 }

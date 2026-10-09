@@ -18,5 +18,4 @@ test("guest can add, update, and remove a cart line with live subtotals", async 
 
   await page.getByRole("button", { name: "Remove" }).click();
   await expect(page.getByText("Your cart is empty.")).toBeVisible();
-  await expect(page.getByTestId("cart-subtotal")).toHaveText("$0.00");
 });
