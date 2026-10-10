@@ -1,4 +1,4 @@
-# CI pipeline for brightbuy-frontend — specs/global/12_DEVOPS_CICD.md §2.2.
+# CI/CD pipeline for brightbuy-frontend — specs/global/12_DEVOPS_CICD.md §2.2.
 name: frontend-ci
 
 on:
@@ -13,25 +13,88 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Node 22: the test tooling (Vitest 5, jsdom 29) declares ^22.12 as its supported engine.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           cache: "npm"
 
       - run: npm ci
       - run: npm run lint
       - run: npx tsc --noEmit
-      # Unit/component tests (Vitest + React Testing Library) land here once the first component
-      # exists to test — see specs/global/05_TESTING_STRATEGY.md.
+      # Unit and component tests (Vitest + React Testing Library). The Playwright e2e suite needs a
+      # browser and a running app, so it is run locally with `npm run e2e` rather than on every push.
+      - run: npm test
       - run: npm run build
 
+  # Continuous delivery, step 1: publish a runnable image to GitHub's container registry on every
+  # green push to main. Pull requests only build it. GITHUB_TOKEN is enough: no extra secret.
   build-image:
     needs: lint-and-build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PUBLISH: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t brightbuy-frontend:${{ github.sha }} .
-      # Pushing to a registry (GHCR) is added once a registry/hosting target is chosen
-      # (TBD-7, specs/global/10_BA_AUDIT_OPEN_QUESTIONS.md).
+
+      - name: Image name
+        run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/brightbuy-frontend" >> "$GITHUB_ENV"
+
+      - name: Log in to GHCR
+        if: env.PUBLISH == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build (and push, on main)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: |
+            ${{ env.IMAGE }}:${{ github.sha }}
+            ${{ env.IMAGE }}:latest
+
+  # Continuous delivery, step 2: deploy to Vercel on every green push to main.
+  # It stays inert (and green) until the three repository secrets below exist, so adding this file
+  # never breaks CI for anyone who has not connected Vercel yet. See docs/DEPLOYMENT.md.
+  deploy-vercel:
+    needs: lint-and-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - name: Check for Vercel secrets
+        id: gate
+        run: |
+          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Vercel deploy skipped: set VERCEL_TOKEN, VERCEL_ORG_ID and VERCEL_PROJECT_ID repository secrets to enable it."
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.enabled == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.enabled == 'true'
+        with:
+          node-version: "22"
+
+      # `vercel build` + `--prebuilt` builds here with the CI's own checks already passed, then uploads
+      # the result: Vercel never rebuilds something that did not pass lint, types and tests.
+      - name: Deploy to production
+        if: steps.gate.outputs.enabled == 'true'
+        run: |
+          npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+          npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
+          npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
