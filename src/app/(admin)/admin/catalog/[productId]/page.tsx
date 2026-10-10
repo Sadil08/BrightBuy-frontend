@@ -13,8 +13,9 @@ import { VariantRow } from "../_components/VariantRow";
 
 export const metadata: Metadata = { title: "Edit product" };
 
-export default async function EditProductPage({ params }: { params: Promise<{ productId: string }> }) {
+export default async function EditProductPage({ params, searchParams }: { params: Promise<{ productId: string }>; searchParams: Promise<{ created?: string }> }) {
   await requireToolAccess("/admin/catalog");
+  const justCreated = (await searchParams).created === "1";
   const id = Number((await params).productId);
   if (!Number.isInteger(id) || id <= 0) notFound();
 
@@ -33,6 +34,12 @@ export default async function EditProductPage({ params }: { params: Promise<{ pr
       <h1 className="mt-1 text-3xl font-extrabold sm:text-4xl">{product.name}</h1>
       <p className="mt-1 text-sm text-ink-soft">{product.categories.map((c) => c.name).join(", ") || "No categories"}</p>
 
+      {justCreated && (
+        <p role="status" className="alert alert-good mt-6 max-w-4xl">
+          Product created. Add photos in the <a href="#images" className="font-bold underline">Images</a> section below. Until you do, the shop shows generated artwork.
+        </p>
+      )}
+
       <div className="mt-6 grid max-w-4xl gap-6">
         <section className="card p-4 sm:p-6" aria-labelledby="details-h">
           <h2 id="details-h" className="mb-4 text-xl font-extrabold">Details</h2>
@@ -50,7 +57,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ pr
           </details>
         </section>
 
-        <section className="card p-4 sm:p-6" aria-labelledby="images-h">
+        <section id="images" className="card scroll-mt-4 p-4 sm:p-6" aria-labelledby="images-h">
           <h2 id="images-h" className="mb-4 text-xl font-extrabold">Images</h2>
           <ImageManager productId={product.productId} images={product.images ?? []} />
         </section>

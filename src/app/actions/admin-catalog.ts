@@ -71,7 +71,7 @@ export async function createProductAction(_prev: CatalogFormState, formData: For
     return fail(err);
   }
   refreshCatalog();
-  redirect(`/admin/catalog/${productId}`);
+  redirect(`/admin/catalog/${productId}?created=1`);
 }
 
 export async function updateProductAction(_prev: CatalogFormState, formData: FormData): Promise<CatalogFormState> {

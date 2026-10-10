@@ -14,7 +14,7 @@ export default async function NewProductPage() {
     <main className="p-4 sm:p-10">
       <Link href="/admin/catalog" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft no-underline hover:text-ink"><ArrowLeftIcon /> Catalogue</Link>
       <h1 className="mt-4 text-3xl font-extrabold sm:text-4xl">New product</h1>
-      <p className="mt-2 max-w-xl text-ink-soft">A product needs at least one category and one variant (a sellable SKU with its own price and stock).</p>
+      <p className="mt-2 max-w-xl text-ink-soft">A product needs at least one category and one variant (a sellable SKU with its own price and stock). Images are added on the next page, once the product exists.</p>
       <div className="mt-6"><ProductForm categories={categories} /></div>
     </main>
   );
