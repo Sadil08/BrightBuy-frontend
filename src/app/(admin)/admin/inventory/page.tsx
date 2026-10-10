@@ -26,8 +26,8 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
   } catch (error) {
     if (error instanceof ApiError && error.status === 403) {
       return (
-        <main className="p-6 sm:p-10">
-          <h1 className="text-4xl font-extrabold">Inventory</h1>
+        <main className="p-4 sm:p-10">
+          <h1 className="text-3xl font-extrabold sm:text-4xl">Inventory</h1>
           <p className="alert alert-bad mt-6 max-w-xl">Your role doesn&apos;t have permission to manage stock. Ask an administrator to grant stock:adjust.</p>
         </main>
       );
@@ -40,9 +40,9 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
   const pageHref = (p: number) => `/admin/inventory?${new URLSearchParams({ ...(q ? { q } : {}), page: String(p) }).toString()}`;
 
   return (
-    <main className="p-6 sm:p-10">
+    <main className="p-4 sm:p-10">
       <p className="eyebrow">Warehouse</p>
-      <h1 className="mt-2 text-4xl font-extrabold">Inventory</h1>
+      <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Inventory</h1>
       <p className="mt-2 max-w-2xl text-ink-soft">
         Search by SKU or product name. Every change is logged with who made it and why.
       </p>
@@ -64,35 +64,30 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
             <p className="text-ink-soft">{q ? `Nothing matches “${q}”. Check the SKU spelling.` : "There are no variants yet."}</p>
           </div>
         ) : (
-          <div className="table-wrap">
-            <table className="table">
-              <thead>
-                <tr><th>SKU</th><th>Product</th><th className="text-right">In stock</th><th><span className="sr-only">Adjust</span></th></tr>
-              </thead>
-              <tbody>
-                {items.map((variant) => (
-                  <tr key={variant.variantId}>
-                    <td className="font-mono text-xs">{variant.sku}</td>
-                    <td className="font-semibold">{variant.productName}</td>
-                    <td className="text-right">
-                      <span className="inline-flex items-center justify-end gap-2">
-                        {variant.stockQuantity === 0 ? <span className="badge badge-bad">Out</span> : variant.stockQuantity <= LOW_STOCK ? <span className="badge badge-warn">Low</span> : null}
-                        <span className="num font-display text-lg font-extrabold">{variant.stockQuantity}</span>
-                      </span>
-                    </td>
-                    <td className="w-px whitespace-nowrap text-right">
-                      <details className="group relative inline-block text-left">
-                        <summary className="btn btn-outline btn-sm marker:hidden [&::-webkit-details-marker]:hidden list-none">Adjust</summary>
-                        <div className="card absolute right-0 z-30 mt-2 w-[min(24rem,85vw)] p-4 shadow-lift">
-                          <AdjustStockForm variantId={variant.variantId} sku={variant.sku} current={variant.stockQuantity} />
-                        </div>
-                      </details>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ul className="divide-y divide-line">
+            {items.map((variant) => (
+              <li key={variant.variantId} className="p-4 sm:px-5">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                  <div className="min-w-0 flex-1 basis-44">
+                    <p className="font-semibold">{variant.productName}</p>
+                    <p className="font-mono text-xs text-ink-soft">{variant.sku}</p>
+                  </div>
+                  <span className="inline-flex items-center gap-2">
+                    {variant.stockQuantity === 0 ? <span className="badge badge-bad">Out</span> : variant.stockQuantity <= LOW_STOCK ? <span className="badge badge-warn">Low</span> : null}
+                    <span className="num font-display text-lg font-extrabold" aria-label={`${variant.stockQuantity} in stock`}>{variant.stockQuantity}</span>
+                  </span>
+                </div>
+                {/* Opens in the flow of the list (not an absolutely-positioned popover), so it can't be
+                    clipped by the card or fall off a narrow screen. */}
+                <details className="group mt-3">
+                  <summary className="btn btn-outline btn-sm marker:hidden [&::-webkit-details-marker]:hidden list-none">Adjust stock</summary>
+                  <div className="mt-3 max-w-md rounded-xl bg-surface-2 p-4">
+                    <AdjustStockForm variantId={variant.variantId} sku={variant.sku} current={variant.stockQuantity} />
+                  </div>
+                </details>
+              </li>
+            ))}
+          </ul>
         )}
         <p className="num border-t border-line px-4 py-3 text-sm text-ink-faint">
           {info.total} variant{info.total === 1 ? "" : "s"}{q ? ` matching “${q}”` : ""}

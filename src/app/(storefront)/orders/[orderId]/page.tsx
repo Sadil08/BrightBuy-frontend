@@ -8,7 +8,8 @@ import { formatEstimateDate } from "@/lib/dates";
 import { formatUsd, moneyToCents } from "@/lib/money";
 import { ProductArt } from "@/components/ProductArt";
 import { ArrowLeftIcon, CheckIcon, StoreIcon, TruckIcon } from "@/components/icons";
-import { OrderStatusBadge, PaymentStatusBadge } from "../../_components/OrderStatusBadge";
+import { OrderStatusBadge, PaymentStatusBadge } from "@/components/OrderStatusBadge";
+import { OrderTimeline } from "@/components/OrderTimeline";
 
 export const metadata: Metadata = { title: "Order details" };
 
@@ -97,6 +98,13 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
               </div>
             </div>
           </section>
+
+          {order.history && order.history.length > 0 && (
+            <section className="card p-5" aria-labelledby="history-heading">
+              <h2 id="history-heading" className="mb-4 text-xl font-extrabold">Order progress</h2>
+              <OrderTimeline history={order.history} />
+            </section>
+          )}
 
           <section className="card p-5" aria-labelledby="totals-heading">
             <h2 id="totals-heading" className="text-xl font-extrabold">Totals</h2>

@@ -14,6 +14,7 @@ export function ProductCard({ product }: { product: ProductSummary }) {
         <ProductArt
           seed={product.productId}
           label={product.name}
+          letters={false}
           className="h-full w-full transition duration-300 group-hover:scale-105"
         />
         <div className="absolute bottom-3 right-3">

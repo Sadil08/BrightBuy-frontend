@@ -139,3 +139,42 @@ export const KeyIcon = (p: IconProps) => (
     <path d="m10.5 12.5 8-8M15.5 7.5l2 2M13 10l2 2" />
   </Icon>
 );
+export const TagIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9Z" />
+    <circle cx="7.5" cy="7.5" r="1.4" />
+  </Icon>
+);
+export const ReceiptIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" />
+    <path d="M9 8h6M9 12h6" />
+  </Icon>
+);
+export const ChartIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 20V4" />
+    <path d="M4 20h16" />
+    <path d="M8 16v-4M12 16V8M16 16v-6" />
+  </Icon>
+);
+export const DownloadIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 4v11" />
+    <path d="m7.5 11 4.5 4.5 4.5-4.5" />
+    <path d="M5 20h14" />
+  </Icon>
+);
+export const ImageIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+    <circle cx="9" cy="10" r="1.6" />
+    <path d="m4 18 5-5 4 4 2.5-2.5L20 18" />
+  </Icon>
+);
+export const EditIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M4 20h4L19 9l-4-4L4 16v4Z" />
+    <path d="m13.5 6.5 4 4" />
+  </Icon>
+);
