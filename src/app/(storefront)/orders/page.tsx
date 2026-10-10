@@ -5,7 +5,7 @@ import { listOrders } from "@/lib/api-client/orders";
 import { cookieHeaderFromRequest, requireUser } from "@/lib/auth/session";
 import { formatUsd } from "@/lib/money";
 import { ArrowLeftIcon, BoxIcon, ChevronRightIcon } from "@/components/icons";
-import { OrderStatusBadge } from "../_components/OrderStatusBadge";
+import { OrderStatusBadge } from "@/components/OrderStatusBadge";
 
 export const metadata: Metadata = { title: "My orders" };
 

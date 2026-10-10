@@ -24,6 +24,14 @@ export interface OrderItem {
   unitPriceAtOrder: Money;
 }
 
+// One row of the order's audit trail (REQ-8.5). `changedBy` (the staff member's email) is only sent on
+// staff endpoints; customers see what happened and when.
+export interface StatusEvent {
+  status: OrderStatus;
+  changedAt: string;
+  changedBy?: string;
+}
+
 export interface Order {
   orderId: number;
   status: OrderStatus;
@@ -33,8 +41,11 @@ export interface Order {
   deliveryFee: Money;
   totalAmount: Money;
   delivery: { mode: DeliveryMode; estimatedDate: string; estimatedDays: number };
+  paymentMethod: PaymentMethod;
   paymentStatus: PaymentStatus;
   createdAt: string;
+  history?: StatusEvent[];
+  customerName?: string; // staff endpoints only
 }
 
 export interface OrderPage {

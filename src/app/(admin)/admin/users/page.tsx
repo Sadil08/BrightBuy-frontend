@@ -14,9 +14,9 @@ export default async function UsersPage() {
   const [userList, roles] = await Promise.all([listUsers(cookieHeader), listRoles(cookieHeader)]);
 
   return (
-    <main className="p-6 sm:p-10">
+    <main className="p-4 sm:p-10">
       <p className="eyebrow">Accounts</p>
-      <h1 className="mt-2 text-4xl font-extrabold">Users</h1>
+      <h1 className="mt-2 text-3xl font-extrabold sm:text-4xl">Users</h1>
 
       <div className="mt-8 grid max-w-6xl items-start gap-6 xl:grid-cols-[22rem_1fr]">
         <CreateStaffForm roles={roles} />

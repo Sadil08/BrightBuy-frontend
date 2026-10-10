@@ -39,5 +39,6 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
     throw new ApiError(res.status, body.code ?? "UNKNOWN", body.message ?? res.statusText, body);
   }
 
+  if (res.status === 204) return undefined as T; // no body (e.g. staff PATCH/DELETE)
   return res.json() as Promise<T>;
 }

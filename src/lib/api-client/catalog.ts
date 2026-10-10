@@ -42,15 +42,22 @@ export interface ProductVariant {
   attributes: VariantAttribute[];
 }
 
+export interface ProductImage {
+  imageId: number;
+  url: string;
+  sortOrder: number;
+  isPrimary: boolean;
+}
+
 export interface Product {
   productId: number;
   name: string;
   description: string;
   categories: Category[];
   variants: ProductVariant[];
-  // No `images` field: the backend doesn't send one yet (product_image is a table 07-admin-catalog
-  // owns, and no migration has created it) — see 01-catalog/tasks.md T12's note. Add it here once
-  // the backend actually starts returning it, not before.
+  // Public URLs of the uploaded images, oldest first; the first is the primary image. Empty until staff
+  // upload one (07-admin-catalog) — the storefront then falls back to generated art.
+  images: ProductImage[];
 }
 
 export interface Page {

@@ -5,6 +5,7 @@ import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getCurrentUser, type UserProfile } from "@/lib/api-client/auth";
+import { toolRoles } from "@/lib/admin/tools";
 
 // Turns the current request's own cookies into a raw "name=value; name2=value2" string, suitable
 // for the Cookie header on a server-to-server fetch to the backend. Next.js's cookies() gives you
@@ -68,15 +69,15 @@ export async function requireStaff(): Promise<UserProfile> {
   return user;
 }
 
-// Inventory is granted by the `stock:adjust` permission, which migration 0004 gives to
-// WAREHOUSE_STAFF (ADMIN holds every permission). The profile only carries a role name, so this is the
-// matching coarse check; the backend's RequirePermission("stock:adjust") is the real enforcement.
-export const INVENTORY_ROLES = ["WAREHOUSE_STAFF", "ADMIN"] as const;
-
-export async function requireInventoryAccess(): Promise<UserProfile> {
+// Gate for a console tool, driven by the same registry the sidebar uses (lib/admin/tools.ts): one
+// source of truth for "which roles see this tool". Coarse and UX-level — the profile only carries a
+// role name — while the backend's RequirePermission is the real enforcement.
+export async function requireToolAccess(href: string): Promise<UserProfile> {
   const user = await requireStaff();
-  if (!(INVENTORY_ROLES as readonly string[]).includes(user.role)) {
+  if (!(toolRoles(href) as readonly string[]).includes(user.role)) {
     redirect("/admin");
   }
   return user;
 }
+
+export const requireInventoryAccess = () => requireToolAccess("/admin/inventory");

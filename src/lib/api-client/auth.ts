@@ -25,16 +25,10 @@ const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8080";
 export const ACCESS_TOKEN_COOKIE = "access_token";
 export const REFRESH_TOKEN_COOKIE = "refresh_token";
 
-export class ApiError extends Error {
-  constructor(
-    public status: number,
-    public code: string,
-    message: string,
-  ) {
-    super(message);
-    this.name = "ApiError";
-  }
-}
+// One ApiError for the whole client layer (defined in index.ts) so `instanceof` checks work no matter
+// which module threw. Re-exported here because earlier code imports it from this file.
+import { ApiError } from "./index";
+export { ApiError };
 
 export interface UserProfile {
   userId: number;
