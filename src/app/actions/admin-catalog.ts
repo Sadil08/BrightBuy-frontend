@@ -31,6 +31,8 @@ function refreshCatalog(productId?: number) {
   revalidatePath("/admin/catalog");
   if (productId) revalidatePath(`/admin/catalog/${productId}`);
   revalidatePath("/products");
+  revalidatePath("/");
+  if (productId) revalidatePath(`/products/${productId}`);
 }
 
 // Reads the repeated `variantSku` / `variantPrice` / `variantStock` / `variantAttrs` fields the
@@ -179,6 +181,12 @@ export async function confirmImageAction(productId: number, objectKey: string, c
   }
   refreshCatalog(productId);
   return { success: "Image uploaded." };
+}
+
+export async function setPrimaryImageAction(formData: FormData): Promise<void> {
+  const productId = id(formData, "productId");
+  await withSilentRefresh((c) => catalog.setPrimaryImage(c, productId, id(formData, "imageId")));
+  refreshCatalog(productId);
 }
 
 export async function deleteImageAction(formData: FormData): Promise<void> {

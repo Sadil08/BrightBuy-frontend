@@ -178,3 +178,9 @@ export const EditIcon = (p: IconProps) => (
     <path d="m13.5 6.5 4 4" />
   </Icon>
 );
+export const SparkleIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M12 3.5 13.9 9l5.6 1.9-5.6 1.9L12 18.3l-1.9-5.5-5.6-1.9L10.1 9 12 3.5Z" />
+    <path d="M19 3v3M17.5 4.5h3" />
+  </Icon>
+);

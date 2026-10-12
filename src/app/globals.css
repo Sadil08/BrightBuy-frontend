@@ -1,105 +1,44 @@
 @import "tailwindcss";
 
 /*
-  BrightBuy design system — "price tag".
-  Concept: a well-lit shop floor. Cool paper ground, deep ink type, cobalt for every action, and one
-  signal-yellow reserved for price tags and the odd highlight. Yellow is never a button, so when the
-  eye lands on it, it is always about money or a promise.
+  BrightBuy design system — "daylight".
+  A bright, calm shop: warm ivory ground, soft slate type, one muted indigo for every action, and a
+  gentle amber kept for prices. Editorial serif headings give it a human voice; the sans body keeps
+  forms and tables easy to read. Surfaces are white with warm, low shadows rather than hard borders.
 
-  Every colour is a token. Bare :root holds the complete light palette; the two dark blocks only
-  redefine tokens (system preference, unless an explicit data-theme overrides it, and the explicit
-  dark choice).
+  Every colour is a token. The storefront is always light on purpose: a shop window should look the
+  same on every screen, whatever the visitor's system theme is.
 */
 :root {
-  --paper: #f3f5fa; /* page ground, a cool grey leaning toward the cobalt */
+  --paper: #faf8f4; /* page ground, warm ivory */
   --surface: #ffffff; /* cards, inputs */
-  --surface-2: #eaeef7; /* quiet fills: chips, table heads */
-  --ink: #11162b; /* text and the "ink" brand colour */
-  --ink-soft: #4b5473; /* secondary text */
-  --ink-faint: #7a83a1; /* captions, placeholders */
-  --line: #dde2ef; /* hairlines */
-  --line-strong: #c3cbe0;
+  --surface-2: #f3efe8; /* quiet fills: chips, table heads */
+  --ink: #1f2430; /* text */
+  --ink-soft: #565d6e; /* secondary text */
+  --ink-faint: #8b909d; /* captions, placeholders */
+  --line: #ebe6dc; /* hairlines */
+  --line-strong: #d9d2c4;
 
-  --action: #2244f0; /* cobalt: buttons, links, focus */
-  --action-hover: #1632c4;
+  --action: #4650d4; /* soft indigo: buttons, links, focus */
+  --action-hover: #373fb4;
   --action-ink: #ffffff;
-  --action-soft: #e4e9ff; /* tinted backgrounds for selected states */
+  --action-soft: #eceefd; /* tinted backgrounds for selected states */
 
-  --tag: #ffc61a; /* signal yellow: price tags, highlights */
-  --tag-ink: #231a00;
+  --tag: #f6c85f; /* amber: price tags, highlights */
+  --tag-ink: #3a2a06;
 
-  --good: #0f7a4d;
-  --good-soft: #d9f4e6;
-  --warn: #a15c00;
-  --warn-soft: #ffeccc;
-  --bad: #c0262d;
-  --bad-soft: #fde1e2;
+  --good: #1e7a55;
+  --good-soft: #e1f3ea;
+  --warn: #9a5b0a;
+  --warn-soft: #fbeed4;
+  --bad: #b8353b;
+  --bad-soft: #fbe5e5;
 
-  --shadow: 0 1px 2px rgb(17 22 43 / 0.06), 0 4px 16px rgb(17 22 43 / 0.06);
-  --shadow-lift: 0 2px 4px rgb(17 22 43 / 0.08), 0 14px 32px rgb(17 22 43 / 0.12);
-  --radius: 0.875rem;
-}
+  --shadow: 0 1px 2px rgb(70 50 20 / 0.05), 0 6px 20px rgb(70 50 20 / 0.06);
+  --shadow-lift: 0 2px 4px rgb(70 50 20 / 0.06), 0 18px 40px rgb(70 50 20 / 0.12);
+  --radius: 1rem;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0c1020;
-    --surface: #151b33;
-    --surface-2: #1d2547;
-    --ink: #eef1fb;
-    --ink-soft: #aab3d3;
-    --ink-faint: #7f89ad;
-    --line: #272f52;
-    --line-strong: #38426d;
-
-    --action: #7b93ff;
-    --action-hover: #9db0ff;
-    --action-ink: #0b1030;
-    --action-soft: #1f2a5c;
-
-    --tag: #ffcf3d;
-    --tag-ink: #231a00;
-
-    --good: #4fd69a;
-    --good-soft: #0f3326;
-    --warn: #ffb44d;
-    --warn-soft: #3a2a0c;
-    --bad: #ff8087;
-    --bad-soft: #3d1519;
-
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.3);
-    --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 14px 32px rgb(0 0 0 / 0.45);
-    color-scheme: dark;
-  }
-}
-
-:root[data-theme="dark"] {
-  --paper: #0c1020;
-  --surface: #151b33;
-  --surface-2: #1d2547;
-  --ink: #eef1fb;
-  --ink-soft: #aab3d3;
-  --ink-faint: #7f89ad;
-  --line: #272f52;
-  --line-strong: #38426d;
-
-  --action: #7b93ff;
-  --action-hover: #9db0ff;
-  --action-ink: #0b1030;
-  --action-soft: #1f2a5c;
-
-  --tag: #ffcf3d;
-  --tag-ink: #231a00;
-
-  --good: #4fd69a;
-  --good-soft: #0f3326;
-  --warn: #ffb44d;
-  --warn-soft: #3a2a0c;
-  --bad: #ff8087;
-  --bad-soft: #3d1519;
-
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 4px 16px rgb(0 0 0 / 0.3);
-  --shadow-lift: 0 2px 4px rgb(0 0 0 / 0.5), 0 14px 32px rgb(0 0 0 / 0.45);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -150,10 +89,11 @@ body {
 h1,
 h2,
 h3 {
-  font-family: var(--f-display), var(--f-body), system-ui, sans-serif;
-  letter-spacing: -0.02em;
+  font-family: var(--f-display), Georgia, serif;
+  font-weight: 560;
+  letter-spacing: -0.015em;
   text-wrap: balance;
-  line-height: 1.1;
+  line-height: 1.12;
 }
 
 ::selection {
@@ -180,6 +120,67 @@ h3 {
   }
 }
 
+/* ---- Hero ambience -------------------------------------------------------------------------- */
+/* Soft, slowly drifting colour washes behind the hero, and frosted-glass chips that sit on them. */
+.aurora {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.aurora span {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(70px);
+  opacity: 0.55;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.aurora span:nth-child(1) {
+  top: -8rem;
+  left: -6rem;
+  width: 30rem;
+  height: 26rem;
+  background: #c9ceff;
+}
+.aurora span:nth-child(2) {
+  top: 2rem;
+  right: -8rem;
+  width: 28rem;
+  height: 24rem;
+  background: #ffd9c2;
+  animation-delay: -6s;
+}
+.aurora span:nth-child(3) {
+  bottom: -9rem;
+  left: 32%;
+  width: 26rem;
+  height: 20rem;
+  background: #c7efe0;
+  animation-delay: -11s;
+}
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(2.5rem, 1.5rem, 0) scale(1.08);
+  }
+}
+.glass {
+  background: rgb(255 255 255 / 0.68);
+  border: 1px solid rgb(255 255 255 / 0.9);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: 0 1px 2px rgb(70 50 20 / 0.05), 0 12px 30px rgb(70 60 120 / 0.12);
+}
+.shimmer-text {
+  background: linear-gradient(100deg, var(--action) 10%, #c0568f 55%, #e08a4b 95%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
 /* ---- Components ---------------------------------------------------------------------------- */
 @layer components {
   .container-page {
@@ -195,10 +196,10 @@ h3 {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    border-radius: 0.7rem;
+    border-radius: 999px;
     border: 1.5px solid transparent;
-    padding: 0.7rem 1.15rem;
-    font-weight: 650;
+    padding: 0.7rem 1.3rem;
+    font-weight: 600;
     font-size: 0.95rem;
     line-height: 1.2;
     cursor: pointer;
@@ -221,7 +222,7 @@ h3 {
   .btn-primary {
     background: var(--action);
     color: var(--action-ink);
-    box-shadow: 0 1px 0 rgb(0 0 0 / 0.15);
+    box-shadow: 0 1px 2px rgb(70 80 212 / 0.25), 0 6px 14px rgb(70 80 212 / 0.18);
   }
   .btn-primary:hover:not(:disabled) {
     background: var(--action-hover);
@@ -251,9 +252,8 @@ h3 {
     font-size: 1.02rem;
   }
   .btn-sm {
-    padding: 0.4rem 0.75rem;
+    padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
-    border-radius: 0.55rem;
   }
 
   /* Form controls */
@@ -266,7 +266,7 @@ h3 {
   }
   .input {
     width: 100%;
-    border-radius: 0.7rem;
+    border-radius: 0.75rem;
     border: 1.5px solid var(--line-strong);
     background: var(--surface);
     color: var(--ink);
@@ -311,9 +311,9 @@ h3 {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
-    border: 1.5px solid var(--line-strong);
+    border: 1.5px solid var(--line);
     background: var(--surface);
-    padding: 0.35rem 0.9rem;
+    padding: 0.35rem 0.95rem;
     font-size: 0.88rem;
     font-weight: 600;
     color: var(--ink-soft);
@@ -323,14 +323,14 @@ h3 {
       color 0.15s;
   }
   .chip:hover {
-    border-color: var(--ink);
+    border-color: var(--ink-faint);
     color: var(--ink);
   }
   .chip[aria-current="true"],
   .chip[aria-checked="true"] {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--paper);
+    background: var(--action-soft);
+    border-color: var(--action);
+    color: var(--action);
   }
   .badge {
     display: inline-flex;
@@ -340,7 +340,8 @@ h3 {
     padding: 0.18rem 0.65rem;
     font-size: 0.76rem;
     font-weight: 700;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    word-spacing: 0.12em;
     white-space: nowrap;
   }
   .badge-good {
@@ -371,12 +372,12 @@ h3 {
     gap: 0.15rem;
     background: var(--tag);
     color: var(--tag-ink);
-    font-family: var(--f-display), system-ui, sans-serif;
-    font-weight: 800;
+    font-family: var(--f-display), Georgia, serif;
+    font-weight: 650;
     letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
-    padding: 0.28rem 0.7rem 0.28rem 1.05rem;
-    border-radius: 0.3rem 0.55rem 0.55rem 0.3rem;
+    padding: 0.28rem 0.75rem 0.28rem 1.05rem;
+    border-radius: 0.3rem 999px 999px 0.3rem;
     clip-path: polygon(0.55rem 0, 100% 0, 100% 100%, 0.55rem 100%, 0 50%);
     line-height: 1.1;
   }
@@ -391,8 +392,8 @@ h3 {
   }
   .eyebrow {
     font-size: 0.74rem;
-    font-weight: 750;
-    letter-spacing: 0.12em;
+    font-weight: 650;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-faint);
   }

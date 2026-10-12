@@ -9,6 +9,7 @@ vi.mock("@/app/actions/admin-catalog", () => ({
   requestImageUploadAction: (...a: unknown[]) => requestUpload(...a),
   confirmImageAction: (...a: unknown[]) => confirm(...a),
   deleteImageAction: vi.fn(),
+  setPrimaryImageAction: vi.fn(),
 }));
 
 import { ImageManager } from "./ImageManager";
@@ -25,6 +26,16 @@ beforeEach(() => {
 });
 
 describe("ImageManager", () => {
+  it("marks the chosen preview and offers the others as candidates", () => {
+    const images = [
+      { imageId: 8, url: "/api/images/8", sortOrder: 0, isPrimary: true },
+      { imageId: 5, url: "/api/images/5", sortOrder: 1, isPrimary: false },
+    ];
+    render(<ImageManager productId={1} images={images} />);
+    expect(screen.getByText("Preview")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Use as preview" })).toHaveLength(1);
+  });
+
   it("rejects non-image types before contacting the server", () => {
     render(<ImageManager productId={1} images={[]} />);
     pick(new File(["x"], "a.gif", { type: "image/gif" }));

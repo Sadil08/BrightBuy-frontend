@@ -1,11 +1,12 @@
 // Three roles, three faces. All load through next/font (self-hosted at build time, no runtime
 // request to Google, no layout shift). CSS reads them through --f-display / --f-body / --f-data
 // (see globals.css).
-import { Bricolage_Grotesque, Instrument_Sans, DM_Mono } from "next/font/google";
+import { Fraunces, Instrument_Sans, DM_Mono } from "next/font/google";
 
-// Display: characterful, slightly quirky grotesque with real weight range. Headlines and prices only.
-const display = Bricolage_Grotesque({
+// Display: a warm, soft-edged serif with a little personality. Headlines and prices only.
+const display = Fraunces({
   subsets: ["latin"],
+  axes: ["opsz"],
   variable: "--f-display",
   display: "swap",
 });

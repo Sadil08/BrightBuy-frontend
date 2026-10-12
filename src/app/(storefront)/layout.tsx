@@ -23,10 +23,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f5fa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1020" },
-  ],
+  themeColor: "#faf8f4",
 };
 
 // Async because it calls getSession() directly — a layout, like a page, can be an async Server
@@ -48,8 +45,7 @@ export default async function StorefrontLayout({
           Skip to content
         </a>
 
-        {/* Fixed dark in both themes on purpose: it reads as a distinct strip above the page. */}
-        <div className="bg-[#11162b] text-[0.82rem] text-white/85">
+        <div className="border-b border-line bg-surface-2 text-[0.82rem] text-ink-soft">
           <div className="container-page flex flex-wrap items-center justify-center gap-x-6 gap-y-1 py-2 text-center">
             <span className="inline-flex items-center gap-2">
               <StoreIcon /> Store pickup is ready the same day when it&apos;s in stock
@@ -60,7 +56,7 @@ export default async function StorefrontLayout({
           </div>
         </div>
 
-        <header className="sticky top-0 z-40 border-b border-line bg-paper/90 backdrop-blur">
+        <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur-md">
           <div className="container-page flex items-center gap-3 py-3 sm:gap-5">
             <Logo />
 
@@ -76,7 +72,7 @@ export default async function StorefrontLayout({
                 type="search"
                 name="q"
                 placeholder="Search laptops, headphones, building sets…"
-                className="input !rounded-full !py-2.5 !pl-11"
+                className="input !rounded-full !bg-surface !py-2.5 !pl-11"
               />
             </form>
 

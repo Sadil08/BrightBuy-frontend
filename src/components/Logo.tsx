@@ -5,9 +5,9 @@ import Link from "next/link";
 export function Logo({ href = "/", compact = false }: { href?: string; compact?: boolean }) {
   return (
     <Link href={href} aria-label="BrightBuy home" className="inline-flex items-center gap-0.5 no-underline">
-      <span className="font-display text-[1.45rem] font-extrabold tracking-tight text-ink">Bright</span>
+      <span className="font-display text-[1.5rem] font-semibold tracking-tight text-ink">Bright</span>
       <span
-        className="font-display text-[1.45rem] font-extrabold tracking-tight text-tag-ink"
+        className="font-display text-[1.5rem] font-semibold tracking-tight text-tag-ink"
         style={{
           background: "var(--tag)",
           padding: "0 0.4rem 0 0.7rem",

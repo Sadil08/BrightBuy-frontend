@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { confirmImageAction, deleteImageAction, requestImageUploadAction } from "@/app/actions/admin-catalog";
+import { confirmImageAction, deleteImageAction, requestImageUploadAction, setPrimaryImageAction } from "@/app/actions/admin-catalog";
 import type { ProductImage } from "@/lib/api-client/catalog";
 import { IMAGE_TYPES, MAX_IMAGE_BYTES } from "@/lib/catalog/parse";
-import { TrashIcon } from "@/components/icons";
+import { CheckIcon, TrashIcon } from "@/components/icons";
 
 // Three steps, matching the backend's pipeline (02_SECURITY_BASELINE.md §4): (1) ask for a presigned
 // URL, (2) PUT the file straight to object storage — it never passes through the API or this app —
@@ -44,20 +44,43 @@ export function ImageManager({ productId, images }: { productId: number; images:
       {images.length === 0 ? (
         <p className="text-sm text-ink-soft">No images yet — the storefront shows generated artwork until one is uploaded.</p>
       ) : (
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {images.map((image) => (
-            <li key={image.imageId} className="card-flat overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image.url} alt="" className="aspect-square w-full object-cover" />
-              <form action={deleteImageAction} className="flex items-center justify-between gap-2 p-2">
-                <input type="hidden" name="productId" value={productId} />
-                <input type="hidden" name="imageId" value={image.imageId} />
-                <span className="text-xs font-semibold text-ink-soft">{image.isPrimary ? "Primary" : `#${image.imageId}`}</span>
-                <button type="submit" className="btn btn-ghost btn-sm" aria-label={`Delete image ${image.imageId}`}><TrashIcon /></button>
-              </form>
-            </li>
-          ))}
-        </ul>
+        <>
+          <p className="text-sm text-ink-soft">
+            The <strong>preview</strong> is the picture shoppers see on the home page and in the shop. Choose it with
+            &ldquo;Use as preview&rdquo;.
+          </p>
+          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {images.map((image) => (
+              <li key={image.imageId} className={`card-flat overflow-hidden ${image.isPrimary ? "ring-2 ring-action" : ""}`}>
+                <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={image.url} alt="" className="aspect-square w-full object-cover" />
+                  {image.isPrimary && (
+                    <span className="badge badge-action absolute left-2 top-2 bg-surface shadow-sm">
+                      <CheckIcon width="0.95em" height="0.95em" strokeWidth={2.4} /> Preview
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center justify-between gap-1 p-2">
+                  {image.isPrimary ? (
+                    <span className="px-1 text-xs font-semibold text-ink-soft">Shown to shoppers</span>
+                  ) : (
+                    <form action={setPrimaryImageAction}>
+                      <input type="hidden" name="productId" value={productId} />
+                      <input type="hidden" name="imageId" value={image.imageId} />
+                      <button type="submit" className="btn btn-outline btn-sm">Use as preview</button>
+                    </form>
+                  )}
+                  <form action={deleteImageAction}>
+                    <input type="hidden" name="productId" value={productId} />
+                    <input type="hidden" name="imageId" value={image.imageId} />
+                    <button type="submit" className="btn btn-ghost btn-sm" aria-label={`Delete image ${image.imageId}`}><TrashIcon /></button>
+                  </form>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       <div>

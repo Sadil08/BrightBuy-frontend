@@ -82,5 +82,7 @@ export const requestImageUploadUrl = (c: string, productId: number, contentType:
   send<UploadUrl>(c, "POST", `/products/${productId}/images/upload-url`, { contentType });
 export const confirmImageUpload = (c: string, productId: number, objectKey: string, contentType: string) =>
   send<ProductImage>(c, "POST", `/products/${productId}/images`, { objectKey, contentType });
+export const setPrimaryImage = (c: string, productId: number, imageId: number) =>
+  send<void>(c, "PUT", `/products/${productId}/images/${imageId}/primary`);
 export const deleteImage = (c: string, productId: number, imageId: number) =>
   send<void>(c, "DELETE", `/products/${productId}/images/${imageId}`);

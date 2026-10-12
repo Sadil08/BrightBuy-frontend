@@ -27,6 +27,8 @@ export interface ProductSummary {
   name: string;
   priceFrom: Money;
   stockStatus: StockStatus;
+  // The preview image staff chose (else the oldest). Absent until the product has an image.
+  imageUrl?: string;
 }
 
 export interface VariantAttribute {
@@ -55,7 +57,7 @@ export interface Product {
   description: string;
   categories: Category[];
   variants: ProductVariant[];
-  // Public URLs of the uploaded images, oldest first; the first is the primary image. Empty until staff
+  // Public URLs of the uploaded images, oldest first; the first is the staff-chosen preview. Empty until staff
   // upload one (07-admin-catalog) — the storefront then falls back to generated art.
   images: ProductImage[];
 }

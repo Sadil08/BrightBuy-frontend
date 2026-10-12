@@ -1,16 +1,14 @@
-// There are no product photos yet (the backend has no image field; product_image arrives with
-// 07-admin-catalog). Rather than grey boxes, every product gets generated art: flat geometric
-// compositions, deterministic per product id so a product always looks like itself, in the brand
-// palette. No gradients, no emoji. When real images exist, swap the body of this component for an
-// <Image> and keep the props.
+// Products without an uploaded photo get generated art instead of a grey box: flat geometric
+// compositions, deterministic per product id so a product always looks like itself, in soft brand
+// tones. No gradients, no emoji. <ProductImage> uses a real photo when one exists and falls back to this.
 
 const PALETTE = [
-  { bg: "#2244f0", a: "#ffc61a", b: "#ffffff", c: "#11162b" }, // cobalt
-  { bg: "#11162b", a: "#ffc61a", b: "#2244f0", c: "#ffffff" }, // ink
-  { bg: "#ffc61a", a: "#11162b", b: "#2244f0", c: "#ffffff" }, // yellow
-  { bg: "#ff6b4a", a: "#11162b", b: "#ffffff", c: "#ffc61a" }, // coral
-  { bg: "#12a67a", a: "#11162b", b: "#ffffff", c: "#ffc61a" }, // green
-  { bg: "#e9edf8", a: "#2244f0", b: "#11162b", c: "#ffc61a" }, // paper
+  { bg: "#aab4f5", a: "#f6c85f", b: "#ffffff", c: "#2c3366" }, // periwinkle
+  { bg: "#2c3366", a: "#f6c85f", b: "#aab4f5", c: "#ffffff" }, // midnight
+  { bg: "#f6d98c", a: "#2c3366", b: "#ffffff", c: "#e98a6b" }, // honey
+  { bg: "#f4a98f", a: "#fbe3d6", b: "#ffffff", c: "#2c3366" }, // apricot
+  { bg: "#9fd8c0", a: "#2c3366", b: "#ffffff", c: "#f6c85f" }, // sage
+  { bg: "#ece7dc", a: "#4650d4", b: "#2c3366", c: "#f6c85f" }, // linen
 ];
 
 function initials(label: string): string {
@@ -36,9 +34,9 @@ export function ProductArt({
   const layout = Math.abs(Math.floor(seed / PALETTE.length)) % 4;
   const text = initials(label);
   // On the ink-coloured tile the plate flips to yellow; everywhere else it is ink with white letters.
-  const onInk = palette.bg === "#11162b";
-  const plateFill = onInk ? "#ffc61a" : "#11162b";
-  const plateText = onInk ? "#11162b" : "#ffffff";
+  const onInk = palette.bg === "#2c3366";
+  const plateFill = onInk ? "#f6c85f" : "#2c3366";
+  const plateText = onInk ? "#2c3366" : "#ffffff";
 
   return (
     <svg
@@ -85,7 +83,7 @@ export function ProductArt({
             x="40"
             y="264"
             fontSize="62"
-            fontWeight="800"
+            fontWeight="600"
             fill={plateText}
             style={{ fontFamily: "var(--f-display), system-ui, sans-serif", letterSpacing: "-0.03em" }}
           >

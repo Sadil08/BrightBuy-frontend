@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ApiError } from "@/lib/api-client";
 import { getProduct } from "@/lib/api-client/catalog";
 import { getSession } from "@/lib/auth/session";
-import { ProductArt } from "@/components/ProductArt";
+import { ProductImage } from "@/components/ProductImage";
 import { ArrowLeftIcon, ShieldIcon, StoreIcon, TruckIcon } from "@/components/icons";
 import { VariantSelector } from "./VariantSelector";
 
@@ -45,14 +45,13 @@ export default async function ProductDetailPage({ params }: Params) {
 
       <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:gap-12">
         <div className="card overflow-hidden self-start">
-          {product.images?.[0] ? (
-            // Plain <img>: the object store's host varies per environment, so next/image would need
-            // a remotePatterns entry for every deployment.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={product.images[0].url} alt={product.name} className="aspect-[4/3] w-full object-cover" />
-          ) : (
-            <ProductArt seed={product.productId} label={product.name} className="aspect-[4/3] w-full" />
-          )}
+          <ProductImage
+            src={product.images?.[0]?.url}
+            productId={product.productId}
+            name={product.name}
+            eager
+            className="aspect-[4/3] w-full"
+          />
         </div>
 
         <div className="flex flex-col gap-6">
@@ -66,7 +65,7 @@ export default async function ProductDetailPage({ params }: Params) {
                 ))}
               </div>
             )}
-            <h1 className="mt-3 text-4xl font-extrabold sm:text-5xl">{product.name}</h1>
+            <h1 className="mt-3 text-4xl sm:text-5xl">{product.name}</h1>
             <p className="mt-4 max-w-prose text-ink-soft">{product.description}</p>
           </div>
 

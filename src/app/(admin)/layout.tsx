@@ -17,10 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f3f5fa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1020" },
-  ],
+  themeColor: "#faf8f4",
 };
 
 // requireStaff() runs ONCE here, in the shared layout, so every console page is behind a verified
