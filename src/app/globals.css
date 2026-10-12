@@ -387,6 +387,13 @@ h3 {
     opacity: 0.8;
   }
 
+    .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   .num {
     font-variant-numeric: tabular-nums;
   }

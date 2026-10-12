@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { getCategories, getProducts } from "@/lib/api-client/catalog";
-import { ProductArt } from "@/components/ProductArt";
 import { ProductImage } from "@/components/ProductImage";
 import { ShieldIcon, SparkleIcon, StoreIcon, TruckIcon, ChevronRightIcon } from "@/components/icons";
 import { ProductCard } from "./_components/ProductCard";
@@ -119,33 +118,28 @@ export default async function Home() {
       </section>
 
       {categories.length > 0 && (
-        <section className="container-page pt-16">
-          <div className="flex items-end justify-between gap-4">
-            <h2 className="text-3xl">Shop by category</h2>
-            <Link href="/products" className="inline-flex items-center gap-1 text-sm font-bold no-underline">
-              All products <ChevronRightIcon />
-            </Link>
-          </div>
-          <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
-            {categories.slice(0, 8).map((category) => (
-              <li key={category.categoryId}>
-                <Link
-                  href={`/products?categoryId=${category.categoryId}`}
-                  className="group card relative flex aspect-[4/3] flex-col justify-end overflow-hidden no-underline transition duration-200 hover:-translate-y-1 hover:shadow-lift"
-                >
-                  <ProductArt
-                    seed={category.categoryId * 5 + 2}
-                    label={category.name}
-                    className="absolute inset-0 h-full w-full transition duration-300 group-hover:scale-105"
-                    letters={false}
-                  />
-                  <span className="relative m-3 self-start rounded-full bg-paper/95 px-3.5 py-1.5 font-display text-base font-semibold text-ink shadow-sm">
-                    {category.name}
-                  </span>
-                </Link>
+        <section className="container-page pt-12" aria-labelledby="categories-h">
+          <h2 id="categories-h" className="text-2xl">Shop by category</h2>
+          {/* One swipeable row: scrolls sideways on phones and narrow windows, wraps nowhere. The
+              right-edge fade hints that there is more to scroll to. */}
+          <div className="relative mt-4">
+            <ul className="no-scrollbar -mx-5 flex snap-x scroll-px-5 gap-2.5 overflow-x-auto px-5 pb-2">
+              <li className="shrink-0 snap-start">
+                <Link href="/products" className="chip whitespace-nowrap no-underline !px-5 !py-2.5 !text-[0.95rem]">All products</Link>
               </li>
-            ))}
-          </ul>
+              {categories.map((category) => (
+                <li key={category.categoryId} className="shrink-0 snap-start">
+                  <Link
+                    href={`/products?categoryId=${category.categoryId}`}
+                    className="chip whitespace-nowrap no-underline !px-5 !py-2.5 !text-[0.95rem] hover:!border-action hover:!bg-action-soft hover:!text-action"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <div className="pointer-events-none absolute inset-y-0 -right-5 w-12 bg-gradient-to-l from-paper to-transparent" aria-hidden="true" />
+          </div>
         </section>
       )}
 
