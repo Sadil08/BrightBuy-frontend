@@ -38,7 +38,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
     <html lang="en" className={fontVariables}>
       <body className="min-h-screen lg:grid lg:grid-cols-[15.5rem_1fr]">
         <aside className="border-b border-line bg-surface lg:sticky lg:top-0 lg:h-screen lg:border-b-0 lg:border-r">
-          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 p-3 sm:p-4 lg:flex-col lg:h-full lg:items-start lg:gap-5 lg:p-5">
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 p-3 sm:p-4 lg:flex-col lg:flex-nowrap lg:h-full lg:items-start lg:gap-5 lg:p-5">
             <div className="flex flex-col gap-1">
               <Logo href="/admin" compact />
               <span className="eyebrow">Staff console</span>
@@ -48,7 +48,7 @@ export default async function AdminLayout({ children }: Readonly<{ children: Rea
               <Link href="/" className="btn btn-outline btn-sm">Shop</Link>
               <form action={logoutAction}><button type="submit" className="btn btn-ghost btn-sm">Log out</button></form>
             </div>
-            <div className="order-last w-full min-w-0 lg:order-none">
+            <div className="order-last w-full min-w-0 lg:order-none lg:min-h-0 lg:flex-1 lg:overflow-hidden">
               <AdminNav items={items} />
             </div>
             <div className="hidden w-full flex-col gap-3 border-t border-line pt-4 lg:mt-auto lg:flex">

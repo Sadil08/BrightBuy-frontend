@@ -15,7 +15,7 @@ export interface NavItem {
 export function AdminNav({ items }: { items: NavItem[] }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Console" className="flex min-w-0 gap-1 overflow-x-auto lg:w-full lg:flex-col lg:overflow-visible">
+    <nav aria-label="Console" className="flex min-w-0 gap-1 overflow-x-auto lg:h-full lg:w-full lg:flex-col lg:overflow-x-hidden lg:overflow-y-auto">
       {items.map((item) => {
         const Icon = ADMIN_ICONS[item.icon];
         const current = item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
