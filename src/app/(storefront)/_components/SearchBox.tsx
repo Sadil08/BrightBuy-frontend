@@ -34,22 +34,30 @@ export function SearchBox({
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const rootRef = useRef<HTMLFormElement>(null);
+  const cache = useRef(new Map<string, Suggestion[]>());
 
   useEffect(() => {
     const q = value.trim();
     if (q.length < 2) return;
+    const cached = cache.current.get(q.toLowerCase());
     const controller = new AbortController();
     const timer = setTimeout(async () => {
+      if (cached) {
+        setItems(cached);
+        setActive(-1);
+        return;
+      }
       try {
         const res = await fetch(`/api/products/suggest?q=${encodeURIComponent(q)}`, { signal: controller.signal });
         if (!res.ok) return;
         const data = (await res.json()) as { items: Suggestion[] };
+        cache.current.set(q.toLowerCase(), data.items);
         setItems(data.items);
         setActive(-1);
       } catch {
         /* aborted or offline: keep whatever is showing */
       }
-    }, 200);
+    }, 100);
     return () => {
       clearTimeout(timer);
       controller.abort();
