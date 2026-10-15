@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { SearchBox } from "../_components/SearchBox";
 import Link from "next/link";
 import { getCategories, getProducts } from "@/lib/api-client/catalog";
-import { SearchIcon, ArrowLeftIcon, ChevronRightIcon } from "@/components/icons";
+import { ArrowLeftIcon, ChevronRightIcon } from "@/components/icons";
 import { CategoryNav } from "../_components/CategoryNav";
 import { ProductCard } from "../_components/ProductCard";
 
@@ -50,15 +51,9 @@ export default async function ProductsPage({
       {/* A plain HTML GET form — submitting it navigates to /products?q=... directly, no JS required.
           The hidden categoryId field preserves the active category filter, since submitting a form
           replaces the ENTIRE query string with just this form's own fields otherwise. */}
-      <form action="/products" method="GET" role="search" className="mt-6 flex gap-2">
-        {categoryId !== undefined && <input type="hidden" name="categoryId" value={categoryId} />}
-        <div className="relative flex-1">
-          <label htmlFor="q" className="sr-only">Search products</label>
-          <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" />
-          <input id="q" type="search" name="q" defaultValue={q} placeholder="Search products…" className="input !pl-11" />
-        </div>
-        <button type="submit" className="btn btn-primary">Search</button>
-      </form>
+      <div className="mt-6 flex gap-2">
+        <SearchBox id="q" variant="header" defaultValue={q} categoryId={categoryId} placeholder="Search products…" className="flex-1" />
+      </div>
 
       <div className="mt-5">
         <CategoryNav categories={categories} selectedCategoryId={categoryId} searchQuery={q || undefined} />

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SearchBox } from "./_components/SearchBox";
 import { getCategories, getProducts } from "@/lib/api-client/catalog";
 import { ProductImage } from "@/components/ProductImage";
 import { ShieldIcon, SparkleIcon, StoreIcon, TruckIcon, ChevronRightIcon } from "@/components/icons";
@@ -46,18 +47,12 @@ export default async function Home() {
               door in five to seven days.
             </p>
 
-            <form action="/products" method="GET" role="search" className="glass mt-8 flex max-w-xl items-center gap-2 rounded-full p-1.5 pl-5">
-              <label htmlFor="hero-q" className="sr-only">What are you looking for?</label>
-              <SparkleIcon className="text-action" />
-              <input
-                id="hero-q"
-                type="search"
-                name="q"
-                placeholder="Try “headphones for long flights”"
-                className="min-w-0 flex-1 bg-transparent py-2.5 text-[0.98rem] text-ink outline-none placeholder:text-ink-faint"
-              />
-              <button type="submit" className="btn btn-primary !py-2.5">Find it</button>
-            </form>
+            <SearchBox
+              id="hero-q"
+              variant="hero"
+              placeholder="Try “headphones for long flights”"
+              className="mt-8 max-w-xl"
+            />
             <div className="mt-4 flex flex-wrap items-center gap-2 text-sm">
               <span className="text-ink-faint">Popular:</span>
               {["Laptops", "Headphones", "Building sets"].map((term) => (

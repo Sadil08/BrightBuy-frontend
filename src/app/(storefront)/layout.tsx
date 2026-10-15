@@ -7,6 +7,7 @@ import { Logo } from "@/components/Logo";
 import { SearchIcon, StoreIcon, TruckIcon } from "@/components/icons";
 import { AccountMenu } from "./_components/AccountMenu";
 import { CartMergeSync } from "./_components/CartMergeSync";
+import { SearchBox } from "./_components/SearchBox";
 import { CartNavLink } from "./_components/CartNavLink";
 
 // This is a ROOT layout (it defines <html>/<body>) even though it's nested inside a route group.
@@ -60,21 +61,12 @@ export default async function StorefrontLayout({
           <div className="container-page flex items-center gap-3 py-3 sm:gap-5">
             <Logo />
 
-            {/* A plain GET form: works with JavaScript off, and lands on the same URL the category
-                chips and pagination use. */}
-            <form action="/products" method="GET" role="search" className="relative hidden flex-1 md:block md:max-w-xl">
-              <label htmlFor="site-search" className="sr-only">
-                Search products
-              </label>
-              <SearchIcon className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-faint" />
-              <input
-                id="site-search"
-                type="search"
-                name="q"
-                placeholder="Search laptops, headphones, building sets…"
-                className="input !rounded-full !bg-surface !py-2.5 !pl-11"
-              />
-            </form>
+            <SearchBox
+              id="site-search"
+              variant="header"
+              placeholder="Search laptops, headphones, building sets…"
+              className="hidden flex-1 md:block md:max-w-xl"
+            />
 
             <nav aria-label="Main" className="ml-auto flex items-center gap-2">
               <Link href="/products" className="btn btn-ghost hidden sm:inline-flex">
